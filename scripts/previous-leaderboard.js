@@ -1,35 +1,31 @@
-async function fetchPreviousLeaderboard() {
+// Fetch and display leaderboard data
+async function fetchLeaderboard() {
     try {
-        const response = await fetch('https://aidsbackend.onrender.com/affiliate/leaderboard/previous');
+        const response = await fetch('https://aidsbackend.onrender.com/affiliate/leaderboard');
         const data = await response.json();
 
         // Debug log
-        console.log('Fetched previous data:', data);
+        console.log('Fetched data:', data);
 
-        if (data && data.length > 0) {
-            const lastWeekData = data[0]; // Get the most recent archived leaderboard
+        // Start countdown using nextAffiliateUpdate
+        if (data.nextAffiliateUpdate) {
+            startCountdown(data.nextAffiliateUpdate);
+        }
 
-            // Add timestamp display if needed
-            const archiveDate = new Date(lastWeekData.archivedAt).toLocaleDateString();
-            if (document.getElementById('archive-date')) {
-                document.getElementById('archive-date').textContent = `Archived on: ${archiveDate}`;
-            }
+        // Check if leaderboard data exists
+        if (data.leaderboard && data.leaderboard.length > 0) {
+            // Display top 3 users
+            displayTop3(data.leaderboard.slice(0, 3));
 
-            if (lastWeekData.leaderboard && lastWeekData.leaderboard.length > 0) {
-                // Display top 3 users
-                displayTop3(lastWeekData.leaderboard.slice(0, 3));
-
-                // Display positions 4+
-                displayRemainingUsers(lastWeekData.leaderboard.slice(3));
-            } else {
-                console.error('No previous leaderboard data found');
-                showToast('No previous leaderboard data available');
-            }
+            // Display positions 4-10
+            displayRemainingUsers(data.leaderboard.slice(3));
+        } else {
+            console.error('No leaderboard data found:', data);
         }
 
     } catch (error) {
-        console.error('Error fetching previous leaderboard:', error);
-        showToast('Error loading previous leaderboard data');
+        console.error('Error fetching leaderboard:', error);
+        showToast('Error loading leaderboard data');
     }
 }
 
@@ -46,45 +42,24 @@ function displayTop3(top3Users) {
         if (user && topPositions[positionIndex]) {
             const position = topPositions[positionIndex];
             try {
-                // Update avatar
-                position.querySelector('.css-1wgwpc8').src = user.user.avatar;
-
-                // Update username
+                position.querySelector('img').src = user.user.avatar;
                 position.querySelector('.css-15a1lq3').textContent = user.user.username;
-
-                // Update wagered amount (convert from cents to dollars)
                 position.querySelector('.css-114dvlx').textContent = (user.wager / 100).toFixed(2);
             } catch (error) {
                 console.error('Error updating position', positionIndex, error);
-                console.error('User data:', user);
-                console.error('Position element:', position);
             }
         }
     });
 }
 
 function displayRemainingUsers(users) {
-    const listContainer = document.querySelector('.css-esk2ah');
+    const listContainer = document.querySelector('.list-container');
 
-    if (!listContainer) {
-        console.error('List container not found');
-        return;
-    }
-
-    // Remove existing list items after the details row
-    const existingRows = document.querySelectorAll('.row.list.row-cols-5');
-    existingRows.forEach(row => {
-        if (!row.classList.contains('details')) {
-            row.remove();
-        }
-    });
-
-    // Create new list items (positions 4+)
     users.forEach((user, index) => {
-        const position = index + 4;
+        const position = index + 4; // Start from position 4
         const row = document.createElement('div');
         row.className = 'row list row-cols-5';
-        row.setAttribute('data-v-1d580398', '');
+
         row.innerHTML = `
             <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>${position}</div>
             <div data-v-1d580398="" class="col-5">
@@ -118,7 +93,74 @@ function getPrize(position) {
     return prizes[position] || '';
 }
 
-// Initialize when the page loads
+// Countdown timer
+function startCountdown(endTimestamp) {
+    const countdownElement = document.getElementById('countdown');
+
+    function updateCountdown() {
+        const now = Date.now();
+        const timeLeft = endTimestamp - now;
+
+        if (timeLeft <= 0) {
+            countdownElement.textContent = 'Updating...';
+            setTimeout(() => location.reload(), 2000);
+            return;
+        }
+
+        // Calculate remaining time
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        // Format with leading zeros
+        const formattedTime = `${days}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        countdownElement.textContent = formattedTime;
+    }
+
+    // Update immediately and then every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+}
+
+// Auto-refresh data every minute
+function startAutoRefresh() {
+    setInterval(fetchLeaderboard, 60000); // Refresh every minute
+}
+
+// Add this function to handle previous leaderboard button click
+async function fetchPreviousLeaderboard() {
+    try {
+        const response = await fetch('http://aidsbackend.onrender.com/affiliate/leaderboard');
+        const data = await response.json();
+
+        console.log('Previous leaderboard data:', data);
+
+        if (data && data.leaderboard && data.leaderboard.length > 0) {
+            // Display top 3 users
+            displayTop3(data.leaderboard.slice(0, 3));
+
+            // Display positions 4-10
+            displayRemainingUsers(data.leaderboard.slice(3, 10));
+        } else {
+            console.error('No previous leaderboard data found:', data);
+            showToast('No previous leaderboard data available');
+        }
+
+    } catch (error) {
+        console.error('Error fetching previous leaderboard:', error);
+        showToast('Error loading previous leaderboard data');
+    }
+}
+
+// Add event listener for the previous leaderboard button
 document.addEventListener('DOMContentLoaded', () => {
-    fetchPreviousLeaderboard();
-});
+    const prevButton = document.querySelector('#previousLeaderboardBtn'); // Update this selector to match your button
+    if (prevButton) {
+        prevButton.addEventListener('click', fetchPreviousLeaderboard);
+    }
+
+    // Initial load of current leaderboard
+    fetchLeaderboard();
+    startAutoRefresh();
+}); 
