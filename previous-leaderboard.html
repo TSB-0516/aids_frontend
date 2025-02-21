@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>AIDS| Previous Upgrader Leaderboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AIDS Previous Leaderboard!">
+  <link rel="icon" type="image/jpg" href="">
+  <link rel="stylesheet" type="text/css" href="./styles/app.css">
+  <link rel="stylesheet" type="text/css" href="./styles/lb.css">
+  <link rel="stylesheet" type="text/css" href="./styles/vendor.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="./styles/toast.css">
+  <style>
+    .warning-message {
+      width: 90%;
+      max-width: 500px;
+      margin: 10px auto;
+      background-color: rgba(248, 246, 246, 0.1);
+      border: 2px solid #ff4444;
+      border-radius: 4px;
+      padding: 15px;
+      color: #ff4444;
+      font-weight: bold;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    @media screen and (max-width: 768px) {
+      .warning-message {
+        width: 95%;
+        padding: 12px;
+        font-size: 14px;
+        margin: 10px auto;
+      }
+    }
+
+    .prev-lb-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgb(37, 99, 235);
+      color: #000;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prev-lb-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: rgb(37, 99, 235);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      border-color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+      color: black;
+    }
+
+    .prev-lb-btn:hover svg {
+      transform: scale(1.1);
+      stroke: black;
+    }
+
+    .prev-lb-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .prev-lb-btn svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.2s ease;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px) scaleX(1) rotate(20deg);
+      }
+
+      50% {
+        transform: translateY(-10px) scaleX(1) rotate(20deg);
+      }
+
+      100% {
+        transform: translateY(0px) scaleX(1) rotate(20deg);
+      }
+    }
+
+    @keyframes floatLeft {
+      0% {
+        transform: translateY(0px) scaleX(-1) rotate(20deg);
+      }
+
+      50% {
+        transform: translateY(-10px) scaleX(-1) rotate(20deg);
+      }
+
+      100% {
+        transform: translateY(0px) scaleX(-1) rotate(20deg);
+      }
+    }
+
+    .coin-container {
+      position: relative;
+      height: 0;
+      margin: 0;
+    }
+
+    .coin-left,
+    .coin-right {
+      position: absolute;
+      height: 100px;
+      width: auto;
+      opacity: 0.7;
+      top: -50px;
+    }
+
+    .coin-left {
+      left: 22%;
+      animation: floatLeft 3s ease-in-out infinite;
+    }
+
+    .coin-right {
+      right: 25%;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @media screen and (max-width: 768px) {
+      .coin-container {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="toast">
+    <span id="message"></span>
+  </div>
+  <canvas id="particleCanvas" width="1536" height="742"></canvas>
+  <div class="glow-container">
+    <div class="left-glow"></div>
+    <div class="right-glow"></div>
+  </div>
+  <object type="image/png" data="" id="leftsvg" height="100%">
+  </object>
+  <object type="image/png" data="" id="rightsvg" height="100%">
+  </object>
+  <header>
+    <nav>
+      <div class="logo-title">
+        <img src="./images/logo.png" alt="Site logo" class="logo">
+        <h1 class="title"><b>AIDS</b></h1>
+      </div>
+      <ul class="nav-links">
+        <!-- Removed empty nav links -->
+      </ul>
+    </nav>
+  </header>
+  <div class="toggle-images" style="margin-top: 50px;">
+    <!-- <img class="game-image clash-image" id="clashImage" src="./images/roobet.png" style="cursor: pointer;opacity: 0.3;"
+      onclick="window.location.href='/leaderboard/roobet'">
+    <div class="vertical-line"></div> -->
+    <img class="game-image clash-image" id="clashImage" src="./images/upgrader.png" style="cursor: pointer;opacity: 1;"
+      onclick="window.location.href=''">
+  </div>
+  <br>
+  <div data-v-1d580398="" data-v-e4097664="" id="appContent">
+    <div data-v-1d580398="">
+      <div data-v-1d580398="" class="row text">
+        <span data-v-1d580398="" class="title">
+          <span class="glow">$1000</span> CODE <span class="glow">AIDS</span> Previous Leaderboard!
+        </span>
+        <span data-v-1d580398="" class="subtitle" style="color: #FFF;">Previous week's results for Code
+          <b>AIDS</b><br><br>
+          <a class="prev-lb-btn" href="index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20V10" />
+              <path d="M18 20V4" />
+              <path d="M6 20v-4" />
+            </svg>
+            CURRENT LEADERBOARD
+          </a>
+        </span>
+      </div>
+      <div class="css-esk2ah">
+        <div class="css-2w2ovy">
+          <div class="css-gqrafh">
+            <div class="css-jehefp">
+              <img alt="2nd place avatar" src="" class="css-1wgwpc8">
+              <div class="css-hca0vm"><span class="css-15a1lq3">2nd</span></div>
+              <div class="css-7ahevu ejrykqo0">
+                <span class="css-1vqddgv">Wagered </span>
+                <span class="css-18icuxn">
+                  <div class="css-1y0ox2o">
+                    <span class="css-114dvlx"></span>
+                  </div>
+                </span>
+              </div>
+              <span class="css-v4675v">
+                <div class="css-1y0ox2o">
+                  <div data-v-1d580398="" class="price-wrapper">$ 75</div>
+                </div>
+              </span>
+            </div>
+            <div class="css-oijls1">
+              <img alt="1st place avatar" src="" class="css-1wgwpc8">
+              <div class="css-hca0vm"><span class="css-15a1lq3">1st</span></div>
+              <div class="css-7ahevu ejrykqo0">
+                <span class="css-1vqddgv">Wagered </span>
+                <span class="css-18icuxn">
+                  <div class="css-1y0ox2o">
+                    <span class="css-114dvlx"></span>
+                  </div>
+                </span>
+              </div>
+              <span class="css-v4675v">
+                <div class="css-1y0ox2o">
+                  <div data-v-1d580398="" class="price-wrapper">$ 150</div>
+                </div>
+              </span>
+            </div>
+            <div class="css-jehefp">
+              <img alt="3rd place avatar" src="" class="css-1wgwpc8">
+              <div class="css-hca0vm"><span class="css-15a1lq3">3rd</span></div>
+              <div class="css-7ahevu ejrykqo0">
+                <span class="css-1vqddgv">Wagered </span>
+                <span class="css-18icuxn">
+                  <div class="css-1y0ox2o">
+                    <span class="css-114dvlx"></span>
+                  </div>
+                </span>
+              </div>
+              <span class="css-v4675v">
+                <div class="css-1y0ox2o">
+                  <div data-v-1d580398="" class="price-wrapper">$ 40</div>
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list details">
+          <div data-v-1d580398="" class="hide-mobile col-2"> Place </div>
+          <div data-v-1d580398="" class="col-5"> User </div>
+          <div data-v-1d580398="" class="col-2"> Prize </div>
+          <div data-v-1d580398="" class="col-3"> Wagered </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>4</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">jackjack</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+            <div data-v-1d580398="" class="price-wrapper">
+              $ 25
+            </div>
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              176.98
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>5</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">76561199216540221</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+            <div data-v-1d580398="" class="price-wrapper">
+              $ 10
+            </div>
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              139.48
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>6</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">tsitsidolidze #RustMagic</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              99.63
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>7</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">pappa</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              42.45
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>8</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">McChonky</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              32.58
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>9</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">imnotok</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              6.95
+            </div>
+          </div>
+        </div>
+        <div data-v-1d580398="" class="row list row-cols-5">
+          <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>10</div>
+          <div data-v-1d580398="" class="col-5">
+            <img data-v-1d580398="" src="">
+            <span data-v-1d580398="">Smith197979</span>
+          </div>
+          <div data-v-1d580398="" class="col-2">
+          </div>
+          <div data-v-1d580398="" class="col-3">
+            <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
+              <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
+              0.85
+            </div>
+          </div>
+        </div>
+        <!-- <h2 style="color: #FFF;font-size: 28px;text-align: center;margin-top: 70px;">Paused!</h2> -->
+      </div>
+    </div>
+  </div>
+
+  <div data-v-5867ad71="" class="row inner-footer">
+    <div data-v-5867ad71="" class="col-5">
+      <div data-v-5867ad71="" class="content">
+        <div data-v-5867ad71="" class="company"></div><br data-v-5867ad71=""><span data-v-5867ad71=""
+          class="copyright">Aleex1<br data-v-5867ad71=""> All Right Reserved 2025.</span>
+      </div>
+    </div>
+
+    <div data-v-5867ad71="" class="col">
+      <span data-v-5867ad71="" class="title">Info</span>
+      <a data-v-5867ad71="" href=""><span data-v-5867ad71="" class="subtitle">Terms of
+          Service</span></a>
+      <a data-v-5867ad71="" href=""><span data-v-5867ad71="" class="subtitle">Privacy
+          Policy</span></a>
+    </div>
+    <div data-v-5867ad71="" class="col">
+      <span data-v-5867ad71="" class="title">Socials</span>
+      <a data-v-5867ad71="" href="" target="_blank" class="social">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="white">
+          <path
+            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+        <span data-v-5867ad71="" class="subtitle social">Twitter</span>
+      </a>
+    </div>
+    <div data-v-5867ad71="" class="col">
+      <span data-v-5867ad71="" class="title">BeGambleAware.com</span>
+      <span data-v-5867ad71="" class="subtitle" style="font-size: 9px;">Responsible Gambling Advisory: While
+        gambling can be entertaining,
+        it's crucial to be aware of the associated risks. Exercise self-control,
+        set limits, and seek support if needed. Enjoy the excitement responsibly
+        and prioritize your well-being.</span>
+    </div>
+  </div>
+
+
+  <script src="./scripts/particles.js"></script>
+  <script src="./scripts/previous-leaderboard.js"></script>
+</body>
+
+</html>
