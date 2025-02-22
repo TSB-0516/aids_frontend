@@ -88,32 +88,51 @@ function displayTop3(top3Users) {
 
 function displayRemainingUsers(users) {
     const listContainer = document.querySelector('.list-container');
+    listContainer.innerHTML = '';
+
+    const rowsContainer = document.createElement('div');
+    rowsContainer.style.cssText = `
+        max-width: 900px;
+        margin: 0 auto;
+    `;
 
     users.forEach((user, index) => {
-        const position = index + 4; // Start from position 4
+        const position = index + 4;
         const row = document.createElement('div');
         row.className = 'row list row-cols-5';
+        row.style.cssText = `
+            border: 1px solid rgb(37, 99, 235);
+            border-radius: 4px;
+            background: rgba(13, 18, 27, 0.75);
+            margin-bottom: 8px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 48px;
+        `;
 
         row.innerHTML = `
-            <div data-v-1d580398="" class="hide-mobile col-2"><b data-v-1d580398="">#</b>${position}</div>
-            <div data-v-1d580398="" class="col-5">
-                <img data-v-1d580398="" src="${user.user.avatar}">
-                <span data-v-1d580398="">${user.user.username}</span>
+            <div data-v-1d580398="" class="hide-mobile col-2" style="color: rgb(37, 99, 235); flex: 0 0 10%; padding-left: 0px;">
+                <b data-v-1d580398="">#</b>${position}
             </div>
-            <div data-v-1d580398="" class="col-2">
-                <div data-v-1d580398="" class="price-wrapper">
-                    ${getPrize(position)}
-                </div>
+            <div data-v-1d580398="" class="col-5" style="color: #fff; font-size: 16px; flex: 0 0 40%; padding-left: -10px; margin-left: -20px;">
+                ${user.user.username}
             </div>
-            <div data-v-1d580398="" class="col-3">
-                <div data-v-1d580398="" class="price-wrapper" style="color: #eee">
-                    <div class="price-image-wrapper" style="height: 0rem; width: 0rem; margin-right: 0px;"></div>
-                    ${(user.wager / 100).toFixed(2)}
+            <div data-v-1d580398="" class="col-3" style="color: #fff; font-size: 16px; flex: 0 0 30%; text-align: right; padding-right: 40px;">
+                ${(user.wager / 100).toFixed(2)}
+            </div>
+            <div data-v-1d580398="" class="col-2" style="text-align: right; flex: 0 0 20%;">
+                <div data-v-1d580398="" class="price-wrapper" style="color: rgb(37, 99, 235);">
+                    $ ${getPrize(position)}
                 </div>
             </div>
         `;
-        listContainer.appendChild(row);
+        rowsContainer.appendChild(row);
     });
+
+    listContainer.appendChild(rowsContainer);
 }
 
 function getPrize(position) {
