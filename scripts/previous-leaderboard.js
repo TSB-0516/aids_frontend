@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchLeaderboard() {
     try {
-        const response = await fetch('https://aidsgamble.onrender.com/leaderboard');
+        const response = await fetch('https://aidsgamble.onrender.com/previous-leaderboard');
         const data = await response.json();
 
         console.log('Fetched data:', data);
