@@ -133,12 +133,16 @@ document.addEventListener("DOMContentLoaded", () => {
   
   function getPrize(position) {
     const prizes = {
-      1: '$ 500',
-      2: '$ 250',
-      3: '$ 100',
-      4: '$ 75',
-      5: '$ 50',
-      6: '$ 25'
+      1: '$400',
+      2: '$250',
+      3: '$100',
+      4: '$75',
+      5: '$50',
+      6: '$40',
+      7: '$30',
+      8: '$25',
+      9: '$20',
+      10: '$10'
     };
     return prizes[position] || '';
   }
