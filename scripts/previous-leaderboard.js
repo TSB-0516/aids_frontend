@@ -321,7 +321,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   
-
-
-    const timerInterval = setInterval(updateTimer, 1000);
-    updateTimer(); // Initial update
