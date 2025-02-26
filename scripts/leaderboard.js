@@ -290,15 +290,15 @@ document.addEventListener("DOMContentLoaded", () => {
   
   function getPrize(position) {
     const prizes = {
-      1: '$400',
-      2: '$250',
-      3: '$100',
-      4: '$75',
-      5: '$50',
-      6: '$40',
-      7: '$30',
-      8: '$25',
-      9: '$20',
+      1: '$650',
+      2: '$350',
+      3: '$200',
+      4: '$125',
+      5: '$75',
+      6: '$50',
+      7: '$25',
+      8: '$20',
+      9: '$15',
       10: '$10'
     };
     return prizes[position] || '';
